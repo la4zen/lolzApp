@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context=".LoginActivity">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="410dp"
+            android:layout_height="734dp" tools:layout_editor_absoluteY="5dp" tools:layout_editor_absoluteX="-1dp">
+        <TextView
+                android:text="Login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/loginTextView"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="Login"
+                android:ems="10"
+                android:id="@+id/editLogin"/>
+        <TextView
+                android:text="Password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/passwordTextView"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/editPassword"/>
+
+        <Button
+                android:text="Login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/button"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
