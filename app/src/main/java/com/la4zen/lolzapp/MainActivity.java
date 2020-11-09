@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mSettings = getSharedPreferences("lolzapp_Configuration", Context.MODE_PRIVATE);
         cookie = mSettings.getString("cookie", null);
+        System.out.println(cookie);
         if (cookie == null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);

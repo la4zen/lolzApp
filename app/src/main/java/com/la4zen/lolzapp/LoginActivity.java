@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.la4zen.lolzapp.R;
 import org.jsoup.Connection;
@@ -19,12 +20,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.Collections;
 
 
 public class LoginActivity extends AppCompatActivity {
 
     Button btnSignIn;
     EditText loginEditText, passwordEditText;
+    TextView errorTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,22 +36,14 @@ public class LoginActivity extends AppCompatActivity {
         btnSignIn = findViewById(R.id.button);
         loginEditText = findViewById(R.id.editLogin);
         passwordEditText = findViewById(R.id.editPassword);
+        errorTextView = findViewById(R.id.errorTextView);
         btnSignIn.setOnClickListener(new View.OnClickListener()
             { //
                 @Override
                 public void onClick (View v){
+                    btnSignIn.setEnabled(false);
+                    errorTextView.setText("Вход...");
                     new logIn().execute();
-                    boolean success = true;/*s
-                        signIn(loginEditText.getText().toString(), passwordEditText.getText().toString()); */
-                    if (success) {
-                        //LoginActivity.super.finish();
-                    } else {
-                        Toast toast = Toast.makeText(getApplicationContext(),
-                                "Не удалось войти.",
-                                Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
-                    }
                 }
             });
     }
@@ -56,22 +51,38 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... args) {
             try {
-                Connection.Response res = Jsoup.connect("https://lolz.guru/login").method(Connection.Method.GET).followRedirects(true).timeout(10000).execute();
-                Document doc = Jsoup.connect("https://lolz.guru/login/login").data(
+                errorTextView.setText("Отправка get-запроса...");
+                Connection.Response response1 = Jsoup.connect("https://lolz.guru/login").method(Connection.Method.GET).followRedirects(true).timeout(10000).execute();
+                errorTextView.setText("Отправка post-запроса с параметрами...");
+                Connection.Response response2 = Jsoup.connect("https://lolz.guru/login/login").data(
                         "login", loginEditText.getText().toString(),
                         "password", passwordEditText.getText().toString(),
                         "stopfuckingbrute1337", "1",
                         "cookie_check","1"
                 ).header("cookie","df_id=960319fc0b468f741693392b329868f7; xf_session=3fdf90ba8877804d5cc05423dfca9629; G_ENABLED_IDPS=google")
-                        .followRedirects(true).post();
-                System.out.println(doc);
-            } catch (IOException e) { System.out.println(e);}
-            return null;
+                 .followRedirects(true).method(Connection.Method.POST).execute();
+                errorTextView.setText("Готово!");
+                Elements result = response2.parse().select("div.loginForm--errors");
+                if (result.isEmpty()) {
+                    SharedPreferences mSettings = getSharedPreferences("lolzapp_Configuration", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = mSettings.edit();
+                    editor.putString("cookie", "xf_session=" + response2.cookies().get("xf_session"));
+                    editor.apply();
+                    return null;
+                } else {
+                    return result.get(0).text();
+                }
+            } catch (IOException e) { System.out.println(e); return "Произошла неизвестная ошибка."; } // Нужен фикс. Пока только так.
         }
 
         @Override
         protected void onPostExecute(String result) {
-
+            if (result == null) {
+                LoginActivity.super.finish();
+            } else {
+                errorTextView.setText(result);
+                btnSignIn.setEnabled(true);
+            }
         }
     }
 }

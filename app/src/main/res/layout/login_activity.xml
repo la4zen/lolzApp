@@ -16,7 +16,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:text="Login"
+                android:text=""
                 android:ems="10"
                 android:id="@+id/editLogin"/>
         <TextView
@@ -34,5 +34,9 @@
                 android:text="Login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/button"/>
+        <TextView
+                android:text=""
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/errorTextView"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
