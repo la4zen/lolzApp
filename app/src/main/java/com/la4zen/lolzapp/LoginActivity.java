@@ -1,10 +1,12 @@
 package com.la4zen.lolzapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     Button btnSignIn;
     EditText loginEditText, passwordEditText;
     TextView errorTextView;
+    String cookie;
+    SharedPreferences mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +63,16 @@ public class LoginActivity extends AppCompatActivity {
                         "password", passwordEditText.getText().toString(),
                         "stopfuckingbrute1337", "1",
                         "cookie_check","1"
-                ).header("cookie","df_id=960319fc0b468f741693392b329868f7; xf_session=3fdf90ba8877804d5cc05423dfca9629; G_ENABLED_IDPS=google")
+                ).header("cookie","df_id=960319fc0b468f741693392b329868f7; G_ENABLED_IDPS=google")
                  .followRedirects(true).method(Connection.Method.POST).execute();
-                errorTextView.setText("Готово!");
+                errorTextView.setText("Обработка...");
                 Elements result = response2.parse().select("div.loginForm--errors");
                 if (result.isEmpty()) {
-                    SharedPreferences mSettings = getSharedPreferences("lolzapp_Configuration", Context.MODE_PRIVATE);
+                    mSettings = getPreferences(Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = mSettings.edit();
-                    editor.putString("cookie", "xf_session=" + response2.cookies().get("xf_session"));
-                    editor.apply();
+                    editor.putString("cookie", response2.headers().get("cookie"));
+                    editor.commit();
+                    System.out.println(mSettings.getString("cookie", null));
                     return null;
                 } else {
                     return result.get(0).text();
@@ -78,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result == null) {
+                setResult(RESULT_OK);
                 LoginActivity.super.finish();
             } else {
                 errorTextView.setText(result);

@@ -6,5 +6,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="MainActivity">
-
+    <TextView
+            android:text="Загрузка баланса..."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/balanceTextView" android:layout_weight="1"
+            tools:layout_editor_absoluteY="1dp" tools:layout_editor_absoluteX="1dp" tools:ignore="MissingConstraints"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="409dp"
+            android:layout_height="729dp" tools:layout_editor_absoluteY="20dp" tools:layout_editor_absoluteX="1dp"
+            tools:ignore="MissingConstraints">
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
