@@ -6,15 +6,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="MainActivity">
-    <ScrollView
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" tools:layout_editor_absoluteX="1dp">
-        <LinearLayout
-                android:orientation="vertical"
+            android:layout_height="match_parent">
+        <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/linearLayout"
-                tools:ignore="MissingConstraints">
-        </LinearLayout>
-    </ScrollView>
+                android:layout_height="685dp">
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/linearLayout"
+                    tools:ignore="MissingConstraints">
+            </LinearLayout>
+
+        </ScrollView>
+        <Button
+                android:text="Выйти"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/logoutButton"/>
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
