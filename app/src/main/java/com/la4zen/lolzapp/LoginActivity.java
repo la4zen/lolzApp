@@ -1,28 +1,18 @@
 package com.la4zen.lolzapp;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.la4zen.lolzapp.R;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.HttpConnection;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.Collections;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,13 +20,17 @@ public class LoginActivity extends AppCompatActivity {
     Button btnSignIn;
     EditText loginEditText, passwordEditText;
     TextView errorTextView;
-    String cookie;
-    SharedPreferences mSettings;
+
+    public SharedPrefs sharedPrefs;
+    public Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+        context = getApplicationContext();
+        sharedPrefs = new SharedPrefs();
+        sharedPrefs.init(context);
         btnSignIn = findViewById(R.id.button);
         loginEditText = findViewById(R.id.editLogin);
         passwordEditText = findViewById(R.id.editPassword);
@@ -68,11 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                 errorTextView.setText("Обработка...");
                 Elements result = response2.parse().select("div.loginForm--errors");
                 if (result.isEmpty()) {
-                    mSettings = getPreferences(Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = mSettings.edit();
-                    editor.putString("cookie", response2.headers().get("cookie"));
-                    editor.commit();
-                    System.out.println(mSettings.getString("cookie", null));
+                    SharedPrefs.setCookie(response2.cookies().get("xf_session"));
                     return null;
                 } else {
                     return result.get(0).text();
